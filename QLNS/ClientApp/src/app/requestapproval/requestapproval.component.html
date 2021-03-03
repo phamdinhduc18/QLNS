@@ -1,0 +1,142 @@
+
+<nz-page-header style="background-color:rgb(251, 251, 251)">
+    <nz-page-header-title style="font-weight: bold">
+        Danh sách đơn nghỉ phép
+    </nz-page-header-title>
+    <nz-page-header-extra>
+        <button nz-button nz-type="primary" (click)=showModal()>
+            Tạo mới
+        </button>
+        <nz-modal [(nzVisible)]="isVisible" nzTitle="Thêm đơn nghỉ phép" [nzFooter]="modalFooter" (nzOnCancel)="handleCancle()">
+            <ng-template #modalFooter>
+                <button nz-button nzType="default" (click)="handleCancle()">Hủy bỏ</button>
+                <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Đồng ý</button>
+            </ng-template> 
+            <form nz-form [formGroup]="validateForm">
+                
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="type" nzRequired>Loại ngày nghỉ</nz-form-label>
+                    <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="Vui lòng chọn loại ngày nghỉ">
+                        <nz-select id="type" formControlName="type" nzPlaceHolder="Vui lòng chọn loại ngày nghỉ" (ngModelChange)="TypeChange($event)">
+                            <nz-option nzValue="{{enum.key}}" *ngFor="let enum of typeList | keyvalue" nzLabel="{{enum.value}}"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <!-- <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="time" nzRequired>Thời gian nghỉ</nz-form-label>
+                    <nz-form-control nzErrorTip="Vui lòng chọn thời gian nghỉ" [nzSm]="18" [nzXs]="24">
+                        <nz-range-picker formControlName="time"></nz-range-picker>
+                    </nz-form-control>
+                </nz-form-item> -->
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Từ ngày</nz-form-label>
+                    <nz-form-control [nzSm]="18" [nzXs]="24">
+                      <nz-input-group>
+                        <nz-date-picker class="datetime" nzFormat="dd/MM/yyyy" formControlName="toTime"></nz-date-picker>
+                      </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+                
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Đến ngày</nz-form-label>
+                    <nz-form-control [nzSm]="18" [nzXs]="24">
+                      <nz-input-group>
+                        <nz-date-picker class="datetime" nzFormat="dd/MM/yyyy" formControlName="fromTime"></nz-date-picker>
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                    <p [hidden]='saiNgay' style="color:red; margin-top: 20px;">Chỉ được nghỉ phép tối đa 2 ngày và ngày sau phải lớn hơn ngày trước</p>
+
+                <nz-form-item>
+                    <label nz-col nz-span="6"></label>
+                    <nz-form-control>
+                        <label nz-checkbox formControlName="half" [(ngModel)]="isHalf">Nghỉ nữa ngày</label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item *ngIf="isHalf">
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Buổi</nz-form-label>
+                    <nz-form-control nzErrorTip="Vui lòng chọn buổi">
+                        <nz-select  id="typeoftime"
+                        formControlName="typeoftime"
+                        nzPlaceHolder="Vui lòng chọn">
+                            <nz-option nzValue="Morning" nzLabel="Buổi sáng"></nz-option>
+                            <nz-option nzValue="Afternoon" nzLabel="Buổi chiều"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="" nzRequired>Lý do nghỉ</nz-form-label>
+                    <nz-form-control nzErrorTip="Vui lòng nhập vào lí do nghỉ">
+                        <textarea rows="4" nz-input formControlName="reason"></textarea>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-modal>
+    </nz-page-header-extra>
+</nz-page-header>
+<nz-table #rowSelectionTable [nzData]="idRole==1 ? listAdmin : (idRole==4 ? listLeader : listEmTotal)" class="tablerequest">
+    <thead>
+        <tr>
+            <th>Tên</th>
+            <th>Ngày nghỉ</th>
+            <th>Loại ngày nghỉ</th>
+            <th>Lí do nghỉ</th>
+            <th>Trạng thái</th>
+            <th>Lí do từ chối</th>
+            <th *ngIf="idRole==5 || idRole==4">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of rowSelectionTable.data">
+            <td>
+                <div *ngFor="let employee of listEmployee">
+                    <div *ngIf="employee.employeeId==data.employeeId">
+                      {{employee.fullName}}
+                    </div>
+                </div>
+            </td>
+            <td>{{data.toTime|date:'dd/MM/yyyy'}}-{{data.fromTime|date:'dd/MM/yyyy'}}</td>
+            <td>{{setType(data.type)}}</td>
+            <td>{{data.reason}}</td>
+            <td><nz-tag [nzColor]="data.status==1? 'green': (data.status==-1?'red':'gold')">{{ data.status==1? 'Đã duyệt': (data.status==-1?'Từ chối':'Chờ duyệt...')}} </nz-tag></td>
+            <td style="max-width: 150px;overflow: hidden;word-wrap: break-word;">{{data.rejectedReason}}</td>
+            <td *ngIf="idRole==5 || idRole==4"><button *ngIf="idRole==5 && data.status ==0 || data.status ==-1" nz-button nzType="primary" 
+                nz-popconfirm
+                nzPopconfirmTitle="Bạn có chắc muốn xóa đơn ?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="DeleteRequestApproval(data.id)"
+                 >Xóa</button>
+                 <button *ngIf="idRole==4 && data.status ==0" nz-button nzType="primary" (click)="Accept(data.id)" >Duyệt</button>
+                 <button *ngIf="idRole==4 && data.status==0" nz-button nzType="primary" nzDanger (click)="showDeny(data.id)">Từ chối</button>
+            </td>
+        </tr>
+        
+    </tbody>
+</nz-table>
+
+
+
+<nz-modal
+[(nzVisible)]="isShowDeny"
+nzTitle="Lí do"
+nzClassName= "modalNotifice"
+(nzOnCancel)="handleDenyCancel()"
+(nzOnOk)="submitDeny()"
+>
+    <form nz-form [formGroup]="formDeny" >
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Lí do từ chối</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzErrorTip="Vui lòng nhập vào lí do!">
+              <textarea formControlName="rejectedReason" nz-input rows="3" placeholder="Nhập vào lí do"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+    </form>
+</nz-modal>
+
+
+
+

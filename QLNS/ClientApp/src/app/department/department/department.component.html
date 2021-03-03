@@ -1,0 +1,331 @@
+<h1 style="font-weight: bold; text-align: center;">Danh sách nhân viên</h1>
+
+<button nz-button nzType="primary" nzShape="circle" title="Thêm nhân viên" (click)="showModalCreate()" *ngIf="isRole">
+  <i nz-icon nzType="user-add" nzTheme="outline"></i>
+</button>
+<button nz-button nzType="primary" nzShape="circle" title="Thêm phòng ban" (click)="showModalCreateDepartment()" style="margin-left: 5px;" *ngIf="isRole">
+  <i nz-icon nzType="appstore-add" nzTheme="outline" ></i>
+</button>
+
+<nz-input-group [nzSuffix]="suffixIconSearch" style="width: 300px; margin-left: 10px;">
+  <input type="text" nz-input [(ngModel)]="searchText" autocomplete="off"  placeholder="Nhập vào..." />
+</nz-input-group>
+<ng-template #suffixIconSearch>
+  <i nz-icon nzType="search"></i>
+</ng-template>
+
+<button nz-button nzType="primary" title="Tải lại trang" (click)="reLoad()" style="margin-left: 10px;">Tải lại trang</button>
+<button nz-button nzType="primary" title="Danh sách phòng ban" (click)="showDepartment()" style="margin-left: 10px;background-color: rgb(29 66 150 / 72%);">Phòng ban</button>
+
+
+<!-- Show Modal Create Employee -->
+  <nz-modal [(nzVisible)]="isShowCreate" nzTitle="Thêm nhân viên" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    
+      <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Hủy bỏ</button>
+        <button nz-button nzType="primary" (click)="confirm()">Đồng ý</button>
+      </ng-template>
+      <form nz-form [formGroup]="validateForm" style="margin: 0px" (ngSubmit)="confirm()">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="fullName">Họ tên</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="Vui lòng nhập vào họ tên!">
+              <input type="text" nz-input formControlName="fullName" id="fullName" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Email</nz-form-label>
+            <nz-form-control nzErrorTip="Vui lòng nhập vào Email!" [nzSm]="18" [nzXs]="24">
+              <nz-input-group>
+                <input type="email" nz-input formControlName="email" placeholder="Email" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Ngày sinh</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+              <nz-input-group>
+                <nz-date-picker class="datetime" nzFormat="dd/MM/yyyy" formControlName="dateOfBirth"></nz-date-picker>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Giới tính</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+              <nz-select formControlName="gender">
+                <nz-option nzValue="Male" nzLabel="Nam">
+                </nz-option>
+                <nz-option nzValue="Female" nzLabel="Nữ">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Số ĐT</nz-form-label>
+            <nz-form-control nzErrorTip="Vui lòng nhập vào SĐT!" [nzSm]="18" [nzXs]="24">
+              <nz-input-group>
+                 <input nz-input formControlName="phoneNumber"
+                 placeholder="Phone Number" type="text"/>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Ngày vào làm</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+              <nz-input-group>
+                <nz-date-picker class="datetime" nzFormat="dd/MM/yyyy" formControlName="startDate"></nz-date-picker>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime">Phòng ban</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+              <nz-select formControlName="department">
+                <nz-option *ngFor="let department of listDepartment" [nzLabel]="department.departmentName"
+                  [nzValue]="department.departmentId">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime">Chức vụ</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+              <nz-select formControlName="role">
+                <nz-option *ngFor="let role of listRole" [nzLabel]="role.roleName"
+                  [nzValue]="role.roleId">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime">Người quản lý</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+              <nz-select formControlName="manager">
+                <nz-option *ngFor="let manager of listManager" [nzLabel]="manager.fullName"
+                  [nzValue]="manager.employeeId">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+         
+          
+      </form>
+    
+  </nz-modal>
+
+
+<!-- Table -->
+<nz-table #basicTable [nzData]= "idDepartment==1 ? listEmployee : listED" class="abc" style="margin-top: 10px;">
+  <thead>
+    <tr>
+      <th>Mã nhân viên</th>
+      <th>Họ tên</th>
+      <th>Giới tính</th>
+      <th>Email</th>
+      <th>Ngày vào làm</th>
+      <th>Phòng ban</th>
+      <th>Chức vụ</th>
+      <th *ngIf="isRole">Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data | filter:searchText">
+      <td>{{data.employeeId}}</td>
+      <td>{{data.fullName}}</td>
+      <td>{{data.gender}}</td>
+      <td>{{data.email}}</td>
+      <td>{{data.startDate | date: 'dd/MM/yyyy'}}</td>
+      <td>
+        <div *ngFor="let department of listDepartment">
+            <div *ngIf="department.departmentId==data.departmentId">
+              {{department.departmentName}}
+            </div>
+        </div>
+      </td>
+    
+      <td>
+        <div *ngFor="let role of listRole">
+            <div *ngIf="role.roleId==data.roleId">
+              {{role.roleName}}
+            </div>
+        </div>
+      </td>
+      <td *ngIf="isRole">
+        <button nz-button nzType="primary" nzShape="circle" title="Sửa nhân viên" (click)="showModalEdit(data.employeeId)"><i nz-icon nzType="edit"></i></button>
+        <button nz-button nzType="primary" nzShape="circle" title="Xóa nhân viên" (click)="showConfirm(data.employeeId)" style="margin-left: 8px;" ><i nz-icon nzType="delete"></i></button>
+        <button nz-button nzType="primary" nzShape="circle" title="Đổi mật khẩu" (click)="resetPassword(data.employeeId)" style="margin-left: 8px;" ><i nz-icon nzType="retweet" nzTheme="outline"></i></button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table> 
+
+<!-- Show Modal Edit Employee -->
+  <nz-modal
+    [(nzVisible)]="isShowEdit"
+    nzTitle="Sửa nhân viên"
+    nzCentered
+    (nzOnCancel)="handleCancelMiddle()"
+    (nzOnOk)="submitEdit()"
+  >
+    <ng-container *nzModalContent>
+      
+      <form nz-form [formGroup]="validateFormEdit" style="margin: 0px" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="fullName">Full Name</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid FullName!">
+            <input type="text" nz-input formControlName="fullName" id="fullName" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Email</nz-form-label>
+          <nz-form-control nzErrorTip="The input is not valid Email!" [nzSm]="18" [nzXs]="24">
+            <nz-input-group>
+              <input type="email" nz-input formControlName="email" placeholder="Email" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Date of birth</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-input-group>
+              <nz-date-picker class="datetime" nzFormat="dd/MM/yyyy" formControlName="dateOfBirth"></nz-date-picker>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>Gender</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-select formControlName="gender">
+              <nz-option nzValue="Male" nzLabel="Male">
+              </nz-option>
+              <nz-option nzValue="Female" nzLabel="Female">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Phone Number</nz-form-label>
+          <nz-form-control nzErrorTip="The input is not valid Phone Number!" [nzSm]="18" [nzXs]="24">
+            <nz-input-group>
+               <input nz-input formControlName="phoneNumber"
+               placeholder="Phone Number" type="text"/>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime" nzRequired>StartDate</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-input-group>
+              <nz-date-picker class="datetime" nzFormat="dd/MM/yyyy" formControlName="startDate"></nz-date-picker>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime">Department</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-select formControlName="department">
+              <nz-option *ngFor="let department of listDepartment" [nzLabel]="department.departmentName"
+                [nzValue]="department.departmentId">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime">Chức vụ</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-select formControlName="role">
+              <nz-option *ngFor="let role of listRole" [nzLabel]="role.roleName"
+                [nzValue]="role.roleId">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="typeoftime">Người quản lý</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-select formControlName="manager">
+              <nz-option *ngFor="let manager of listManager" [nzLabel]="manager.fullName"
+                [nzValue]="manager.employeeId">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+       
+        
+    </form>
+    </ng-container>
+  </nz-modal>
+
+  <!-- Show modal create Department -->
+<nz-modal [(nzVisible)]="isShowModalCreateDepartment" nzTitle="Thêm phòng ban" [nzFooter]="modalFooterDP" (nzOnCancel)="handleCancleDepartment()" (nzOnOk)="handleOkDepartment()">
+  <ng-template #modalFooterDP>
+    <button nz-button nzType="default" (click)="handleCancleDepartment()">Hủy bỏ</button>
+    <button nz-button nzType="primary" (click)="confirmDepartment()">Đồng ý</button>
+  </ng-template>
+  <form nz-form [formGroup]="validateCreateFormDepartment" (ngSubmit)="confirmDepartment()">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24"  nzRequired nzFor="departmentName">Tên phòng ban</nz-form-label>
+      <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="Vui lòng nhập vào tên phòng!">
+        <input type="text" nz-input formControlName="departmentName" id="departmentName" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="description">Mô tả:</nz-form-label>
+      <nz-form-control nzErrorTip="Vui lòng nhập vào mô tả">
+        <textarea rows="4" nz-input formControlName="description"></textarea>
+      </nz-form-control>
+      
+    </nz-form-item>
+
+  </form>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="isShowDepartment"
+  nzTitle="Hiển thị phòng ban"
+  nzCentered
+  (nzOnCancel)="handleCancleShowDepartment()"
+  (nzOnOk)="submitEdit()"
+>
+  <ng-container *nzModalContent>
+    
+    <nz-table #basicTableDepartment [nzData]="listDepartment"  class="TableDepartment" style="margin-top: 10px;">
+      <thead>
+        <tr>
+          <th>Tên phòng ban</th>
+          <th>Mô tả</th>
+          <th *ngIf="isRole">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTableDepartment.data ">
+          <td>{{data.departmentName}}</td>
+          <td>{{data.description}}</td>
+          <td *ngIf="isRole">
+            <button nz-button nzType="primary" nzShape="circle" title="Sửa phòng ban" (click)="showModalEdit(data.employeeId)"><i nz-icon nzType="edit"></i></button>
+            <button nz-button nzType="primary" nzShape="circle" title="Xóa phòng ban" (click)="showConfirmDeleteDepartment(data.departmentId)" style="margin-left: 8px;" ><i nz-icon nzType="delete"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table> 
+  </ng-container>
+</nz-modal>
+
+
+
+

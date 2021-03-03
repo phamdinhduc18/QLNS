@@ -1,0 +1,21 @@
+<div fxLayoutAlign="center center" class="mat-main">
+    <mat-card fxFlex="20" fxFlex.md="25" fxFlex.sm="25" fxFlex.xs="calc(75%-50px)" class="card-mat">
+        <div fxLayoutAlign="center center">
+            <img src="https://i0.wp.com/s1.uphinh.org/2021/02/25/TMTSolutions-Logo-vZBBY-removebg-preview.png" alt="tmt" class="img-head">
+        </div>
+        <h1 class="title">Đăng nhập</h1>
+        <form fxLayoutAlign="stretch" fxLayout="column" class="login-form" nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+            <mat-form-field class="email">
+              <input matInput type ="text" placeholder="Email" nz-input formControlName="email"  >
+            </mat-form-field>
+          
+            <mat-form-field class="password" nzErrorTip="Please input your Password!">
+                <input matInput type="password" placeholder="Mật Khẩu" nz-input formControlName="password" value="" >
+            </mat-form-field>
+            <section>
+                <br>
+            </section>
+            <button mat-raised-button mat-button type="submit" style="background-color: #39a2f5;color: white;">Đăng nhập</button>
+        </form>
+    </mat-card>
+</div>

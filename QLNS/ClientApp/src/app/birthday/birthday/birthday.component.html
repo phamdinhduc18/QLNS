@@ -1,0 +1,153 @@
+<head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  </head>
+
+<div nz-row>
+    <div nz-col nzSpan="6">
+        <nz-card nzHoverable  >
+            <div nz-row>
+                <div nz-col nzSpan="14">
+                    <h4 class="animate__animated animate__pulse animate__delay-3s animate__slower animate__infinite" style="font-weight: bold;">Sinh nhật hôm nay : ({{today}})</h4>
+                    <h5>Số lượng : {{countBirthDay}}</h5>
+                </div>
+    
+                <div nz-col nzSpan="10">
+                    <img src="https://www.animatedimages.org/data/media/1243/animated-happy-birthday-image-0025.gif" height="70px" width="auto" alt="animated-happy-birthday-image-0025" />              
+                </div>
+            </div>
+            
+      </nz-card>
+    </div>
+    <div nz-col nzSpan="6" style="margin-left: 20px;">
+        <nz-card nzHoverable  >
+            
+            <div nz-row>
+                <div nz-col nzSpan="14">
+                    <h4 class="animate__animated animate__pulse animate__slower animate__infinite" style="font-weight: bold;">Sinh nhật tháng này : ({{mm}})</h4>
+                    <h5>Số lượng : {{countMonth}}</h5>
+                </div>
+                <div nz-col nzSpan="10">
+                    <img src="https://www.animatedimages.org/data/media/1243/animated-happy-birthday-image-0025.gif" alt="animated-happy-birthday-image-0057" height="70px" width="auto"  />
+                </div>
+            </div>
+      </nz-card>
+    </div>
+
+    <div nz-col nzSpan="8" style="margin-left: 20px;">
+        <nz-card nzHoverable  >
+            <div nz-row>
+                <div nz-col nzSpan="6">
+                    <img src="https://i0.wp.com/s1.uphinh.org/2021/02/23/TMTSolutions-Logo-vZBBY-removebg-preview-1.png" alt="TMTSolutions-Logo-vZBBY-removebg-preview-1.png" height="70px" width="100px" />
+
+                </div>
+                <div nz-col nzSpan="12">
+                    <img src="https://i.ibb.co/D4nHZwY/textprome-16035b99bafe44.jpg" alt="textprome-16035b99bafe44" width="auto" height="70px" style="border-radius:10px"  />
+                </div>
+            </div>
+            
+      </nz-card>
+    </div>
+</div>
+
+
+
+<div style="background: white; margin-top: 20px; height: 700px;">
+    <div nz-row [nzGutter]="8">
+      <div nz-col [nzSpan]="12"  style="margin-top: 20px;">
+        <nz-card nzTitle="Danh sách nhân viên có sinh nhật hôm nay">
+            <nz-table #birthDay [nzData]="listBirthDayNoti" class="daynow">
+                <thead>
+                    <tr>
+                        <th>Mã nhân viên</th>
+                        <th>Họ tên</th>
+                        <th>Ngày sinh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of birthDay.data">
+                        <td>{{data.employeeId}}</td>
+                        <td>{{data.fullName}}</td>
+                        <td>{{data.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
+                    </tr>
+                    
+                </tbody>
+              </nz-table>
+        </nz-card>
+      </div>
+    <div nz-col [nzSpan]="12"  style="margin-top: 20px;">
+        <nz-card>
+            <div nz-row>
+                <div nz-col nzSpan="24">
+                    <form nz-form [formGroup]="monthForm" (ngSubmit)="submitForm()">
+                
+                        <nz-form-item>
+                            <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="typeoftime" style=" font-weight: 500;font-size: 16px;">Tháng sinh nhật </nz-form-label>
+                            <nz-form-control [nzSm]="8" [nzXs]="24" >
+                              <nz-select formControlName="month" ngModel="1">
+                                <nz-option nzValue="1" nzLabel="Tháng 1">
+                                </nz-option>
+                                <nz-option nzValue="2" nzLabel="Tháng 2">
+                                </nz-option>
+                                <nz-option nzValue="3" nzLabel="Tháng 3">
+                                </nz-option>
+                                <nz-option nzValue="4" nzLabel="Tháng 4">
+                                </nz-option>
+                                <nz-option nzValue="5" nzLabel="Tháng 5">
+                                </nz-option>
+                                <nz-option nzValue="6" nzLabel="Tháng 6">
+                                </nz-option>
+                                <nz-option nzValue="7" nzLabel="Tháng 7">
+                                </nz-option>
+                                <nz-option nzValue="8" nzLabel="Tháng 8">
+                                </nz-option>
+                                <nz-option nzValue="9" nzLabel="Tháng 9">
+                                </nz-option>
+                                <nz-option nzValue="10" nzLabel="Tháng 10">
+                                </nz-option>
+                                <nz-option nzValue="11" nzLabel="Tháng 11">
+                                </nz-option>
+                                <nz-option nzValue="12" nzLabel="Tháng 12">
+                                </nz-option>
+                              </nz-select>
+                            </nz-form-control>
+                            <button nz-button nzType="primary" type="submit" style="margin-left: 10px;">Đồng ý</button>
+                          </nz-form-item>
+                    
+                       
+                      </form>
+                </div>
+                
+              </div>
+            <nz-table #birthMonth [nzData]="listMonth" class="monthlist">
+                <thead>
+                    <tr>
+                        <th>Mã nhân viên</th>
+                        <th>Họ tên</th>
+                        <th>Ngày sinh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of birthMonth.data">
+                        <td>{{data.employeeId}}</td>
+                        <td>{{data.fullName}}</td>
+                        <td>{{data.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
+                    </tr>
+                    
+                </tbody>
+              </nz-table>
+        </nz-card>
+    </div>
+    </div>
+  </div>
+
+  <div nz-col [nzSpan]="12" style="margin-top: 20px;">
+    
+  </div>
+            
+
+  
+
+

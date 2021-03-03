@@ -1,0 +1,95 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar class="mat-accent">
+      <mat-toolbar-row>
+        <span class="title dialog-title">Add Employee</span>
+        <button mat-icon-button aria-label="Close dialog">
+          <mat-icon (click)="dialogRef.close()">close</mat-icon>
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div mat-dialog-content class="than" fusePerfectScrollbar>
+      <form [formGroup]="formControl" (ngSubmit)="submit()" >
+        <!-- name -->
+        <mat-form-field appearance="outline" class="matform">
+          <mat-label>Full Name </mat-label>
+          <input matInput class="Name"  formControlName="fullName" autocomplete="off"  type="text"  required>
+          <mat-error>
+            <span *ngIf="formControl.controls.fullName.errors?(formControl.controls.fullName.errors.required?true:false):false">
+              Please fill this field
+            </span>
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- email -->
+        <mat-form-field appearance="outline" class="matform">
+          <mat-label>Email </mat-label>
+          <input matInput class="Name"  formControlName="email" autocomplete="off"  type="text" required>
+          <mat-error>
+            <span *ngIf="formControl.controls.email.errors?(formControl.controls.email.errors.required?true:false):false">
+              Please fill this field
+            </span>
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- phone -->
+        <mat-form-field appearance="outline" class="matform">
+          <mat-label>Phone </mat-label>
+          <input matInput class="Name"  formControlName="phone" autocomplete="off"  type="text" pattern="[0-9]*" maxlength="11" required>
+          <mat-error>
+            <span *ngIf="formControl.controls.phone.errors?(formControl.controls.phone.errors.required?true:false):false">
+              Please fill this field
+            </span>
+            <span *ngIf="formControl.controls.phone.errors?(formControl.controls.phone.errors.pattern?true:false):false">
+              Name only contains 0-9, min=9 number && max=10 number
+            </span>
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- dia chi -->
+        <mat-form-field appearance="outline" class="matform">
+          <mat-label>Address </mat-label>
+          <input matInput class="Name"  formControlName="diaChi" autocomplete="off"  type="text" required>
+          <mat-error>
+            <span *ngIf="formControl.controls.diaChi.errors?(formControl.controls.diaChi.errors.required?true:false):false">
+              Please fill this field
+            </span>
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- managerment id -->
+        <mat-form-field appearance="outline" class="matform">
+          <mat-label>Management Id </mat-label>
+          <input matInput class="Name"  formControlName="managerId" autocomplete="off"  type="text" required>
+          <mat-error>
+            <span *ngIf="formControl.controls.managerId.errors?(formControl.controls.managerId.errors.required?true:false):false">
+              Please fill this field
+            </span>
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- gender -->
+        <div class="gender-layout">
+          <div class="gender-input">
+            <mat-label>Gender:</mat-label>
+            <mat-radio-group formControlName="gender" required>
+              <mat-radio-button class="gender-value" value="Male">Male</mat-radio-button>
+              <mat-radio-button class="gender-value" value="Female">Female</mat-radio-button>
+            </mat-radio-group>
+          </div>
+         <div class="gender-error">
+            <mat-error>
+              <span *ngIf="formControl.value.gender==null && isSubmmitted">Please select this field</span>
+            </mat-error>
+          </div>
+        </div>
+  
+       
+  
+      </form>      
+    </div>
+     <div mat-dialog-actions class="dialog-footer">
+          <button ngbAutofocus mat-raised-button class="mat-accent" (click)="submit()" [disabled]=""><i class="fas fa-save" ></i>
+              Submit</button>
+          <button mat-button mat-dialog-close>Cancel</button>
+        </div>
+  </div>

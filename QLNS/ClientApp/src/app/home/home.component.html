@@ -1,0 +1,181 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="https://tpos.vn/" target="_blank">
+        <img src="https://cdn.timviecnhanh.com/asset/home/img/employer/56c681e3681c9_1455849955.png" alt="logo">
+        <h1>Chào, {{username}}</h1>
+      </a>
+    </div>
+    <ul nz-menu nzMode="inline" nzTheme="dark" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item nz-tooltip nzTooltipPlacement="right">
+        <i nz-icon nzType="group"></i>
+        <span routerLink="/home/Department">Quản lý phòng ban</span>
+      </li>
+      <li nz-menu-item nz-tooltip nzTooltipPlacement="right">
+        <i nz-icon nzType="gift"></i>
+        <a routerLink="/home/Birthday">Quản lý sinh nhật</a>
+      </li>
+      <li nz-menu-item nz-tooltip nzTooltipPlacement="right" >
+        <i nz-icon nzType="mail"></i>
+        <a routerLink="/home/RequestApproval">Đơn nghỉ phép</a>
+      </li>
+      <li nz-submenu nzTitle="Quản lí bài viết" nzIcon="container">
+        <ul>
+          <li nz-menu-item><a routerLink="/home/Blog">Bài viết</a></li>
+          <li nz-menu-item>Duyệt bài viết</li>
+          <li nz-menu-item>Quản lí bình luận</li>
+        </ul>
+      </li>
+      
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <i class="trigger"
+         style="color: white;"
+             nz-icon
+             [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></i>
+        </span>
+        <div class="Profile">
+          <nz-badge class="nzbNoti" [nzCount]="count" *ngIf="isRole">
+            <a (click)="showModal()" nz-popconfirm title="Đơn nghỉ phép"  nzTitle="Modal Title" (nzOnCancel)="handleCancel()">
+                <i style="padding-right: 10px;height: 20px; color: white;" nz-icon nzType="bell" nzTheme="outline"></i></a>
+          </nz-badge>
+        
+          <nz-badge class="nzbNoti" [nzCount]="countBirthDay" *ngIf="isRole" style="margin-left: 30px;margin-right: 30px;">
+            <a (click)="showModalBirthDay()" nz-popconfirm title="Sinh nhật"  nzTitle="Modal Title" (nzOnCancel)="handleCancel()">
+                <i style="padding-right: 10px;height: 20px; color: white;" nz-icon nzType="gift" nzTheme="outline"></i></a>
+          </nz-badge>
+          <a nz-dropdown [nzDropdownMenu]="menu" style="color: white;margin-right: 20px;">
+            <img src="https://tincandoc.com/wp-content/uploads/2020/10/Cristiano-Ronaldo.jpg" alt="" style="height: 35px;width: 35px;">
+            Chào, {{username}}
+            <i nz-icon nzType="down"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="showModalChangePW()" ><a>Đổi mật khẩu</a> </li>              
+              <li nz-menu-item nzDanger (click)="loadTwo()"><a style="color: rgb(243, 12, 12);">Đăng xuất</a></li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div >
+        <router-outlet (activate)="onActivate($event)"></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+
+<nz-modal
+[(nzVisible)]="isVisible"
+nzTitle="Thông báo đơn nghỉ phép"
+nzClassName= "modalNotifice"
+(nzOnCancel)="handleCancel()"
+[nzOkLoading]="isOkLoading"
+>
+<nz-table #rowSelectionTable [nzData]="listNotiPQ">
+  <thead>
+      <tr>
+          <th>Tiêu đề</th>
+          <th>Đường dẫn</th>
+         
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data">
+          <td>{{data.title}}</td>
+          <td><a href="http://localhost:4200/home/RequestApproval">{{data.linkRelated}}</a></td>
+          
+      </tr>
+      
+  </tbody>
+</nz-table>
+</nz-modal>
+
+
+
+  <nz-modal
+  [(nzVisible)]="isShowBirthDay"
+  nzTitle="Thông báo sinh nhật"
+  nzClassName= "modalBirthday"
+  (nzOnCancel)="handleBirthDayCancel()"
+  [nzOkLoading]="isOkLoading"
+  >
+    <nz-table #birthDay [nzData]="listBirthDayNoti">
+      <thead>
+          <tr>
+              <th>Mã nhân viên</th>
+              <th>Họ tên</th>
+              <th>Ngày sinh</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let data of birthDay.data">
+              <td>{{data.employeeId}}</td>
+              <td>{{data.fullName}}</td>
+              <td>{{data.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
+          </tr>
+          
+      </tbody>
+    </nz-table>
+  </nz-modal>
+
+  <!-- show modal change password -->
+  <nz-modal [(nzVisible)]="isShowChangePW" nzTitle="Đổi mật khẩu" [nzFooter]="modalFooterChangePW" (nzOnCancel)="handleCancelChangePW()" (nzOnOk)="handleOkChangePW()">
+    <ng-template #modalFooterChangePW>
+      <button nz-button nzType="default" (click)="handleCancelChangePW()">Hủy</button>
+      <button nz-button nzType="primary" (click)="submitFormChangePW()">Đồng ý</button>
+    </ng-template>
+      <form nz-form [formGroup]="validateFormChangePW" style="margin:0px" (ngSubmit)="submitFormChangePW()">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu hiện tại!">
+            <nz-input-group>
+              <input type="password" nz-input formControlName="currentPassword" placeholder="Mật khẩu hiện tại" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzErrorTip]="passwordErrorTpl">
+            <nz-input-group>
+              <input type="password" nz-input formControlName="newPassword" placeholder="Mật khẩu mới" />
+            </nz-input-group>
+            <ng-template #passwordErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Vui lòng nhập mật khẩu mới!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('same')">
+                Mật khẩu mới trùng mật khẩu cũ
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzErrorTip]="passwordErrorTplConfirmPassword">
+            <nz-input-group>
+              <input type="password" nz-input formControlName="rePassword" placeholder="Nhập lại mật khẩu mới" />
+            </nz-input-group>
+            <ng-template #passwordErrorTplConfirmPassword let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Vui lòng nhập lại mật khẩu mới!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('confirm')">
+                Mật khẩu mới không trùng khớp!
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+  </nz-modal>
+

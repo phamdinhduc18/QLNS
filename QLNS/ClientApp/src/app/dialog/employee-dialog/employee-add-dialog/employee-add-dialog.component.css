@@ -1,0 +1,53 @@
+.dialog-content-wrapper{
+    margin:-24px;  
+  }
+  .than{
+    margin: 0px;
+    padding: 24px;
+  }
+  .dialog-footer{
+    margin: 0px;
+    padding: 20px;
+  }
+  .matform {
+    width: 100%;
+  }
+  
+  mat-label {
+    color: rgb(22, 22, 22);
+  }
+  
+  mat-toolbar-row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .gender-layout {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 80%;
+  }
+    .gender-input {
+      flex-basis: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;}
+      .gender-value {
+        margin-left: 30px;
+      }
+    
+    .gender-error {
+      flex-basis: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 3px;
+      font-size: 13px;
+    }
+  

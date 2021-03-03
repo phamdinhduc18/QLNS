@@ -1,0 +1,42 @@
+<!-- <nz-page-header style="background-color:rgb(251, 251, 251)">
+  <nz-page-header-title style="font-weight: bold; ">Danh Sách Nhân Viên</nz-page-header-title>
+  <button nz-button nzType="primary" (click)="showModal()">Thêm nhân viên</button>
+<nz-page-header> -->
+<h1>The list of Employee</h1>
+<button mat-mini-fab 
+  class="add-employee-btn"
+  title="Add an Employee"
+  (click)="openAddEmployeeDialog()"
+  *ngIf="isRole">
+  <mat-icon>group_add</mat-icon>
+  
+</button>
+<nz-table #rowSelectionTable nzShowSizeChanger [nzData]="list" style="margin-top: 10px;">
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Gender</th>
+      <th>Username</th>
+      <th *ngIf="isRole">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of rowSelectionTable.data">
+      <td>{{data.fullName}}</td>
+      <td>{{data.email}}</td>
+      <td>{{data.phoneNumber}}</td>
+      <td>{{data.gender}}</td>
+      <td>{{data.username}}</td>
+      <td *ngIf="isRole">
+        <button mat-mini-fab type="button" title="Reset Passwork" (click)="resetPassword(data.employeeId)" *ngIf="isRole">
+          <mat-icon>autorenew</mat-icon>
+        </button>
+        <button mat-mini-fab type="button" title="Delete an Employee" (click)="Delete(data.employeeId)" *ngIf="isRole" style="margin-left: 6px;">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
